@@ -5,7 +5,7 @@
 > In 2024, 3,193 people died on the roads of metropolitan France — almost 9 a day, and only 1.6 % fewer than in 2019.
 > The EU wants road deaths halved by 2030. This app shows **where, who and when** the risk concentrates, and what it would take to get there.
 
-- **Live app:** `<https://road-deaths-france.streamlit.app>`
+- **Live app:** https://road-deaths-france.streamlit.app
 - **Demo video (2–4 min):** `<add your video link here>` — script in [`docs/demo_video_script.md`](docs/demo_video_script.md)
 - **Storyboard:** [`docs/storyboard.md`](docs/storyboard.md)
 
@@ -150,4 +150,3 @@ docs/                      storyboard, demo-video script
 
 - Data: ONISR – Ministère de l'Intérieur, via data.gouv.fr, Licence Ouverte v2.0. Boundaries: IGN / france-geojson, Licence Ouverte.
 - Code: MIT licence (see `LICENSE`).
-- Development note: in the build environment data.gouv.fr was not reachable, so the 20 files were taken from a public GitHub copy and checked against the official byte sizes published by the data.gouv.fr API: 17 identical, 3 (2020) differ only by line endings. Running `python -m scripts.build_data --refresh` re-downloads the originals.
