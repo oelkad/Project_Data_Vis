@@ -5,7 +5,7 @@
 > In 2024, 3,193 people died on the roads of metropolitan France — almost 9 a day, and only 1.6 % fewer than in 2019.
 > The EU wants road deaths halved by 2030. This app shows **where, who and when** the risk concentrates, and what it would take to get there.
 
-- **Live app:** `<add your Streamlit Community Cloud URL here>`
+- **Live app:** `<https://road-deaths-france.streamlit.app>`
 - **Demo video (2–4 min):** `<add your video link here>` — script in [`docs/demo_video_script.md`](docs/demo_video_script.md)
 - **Storyboard:** [`docs/storyboard.md`](docs/storyboard.md)
 
