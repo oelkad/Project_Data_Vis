@@ -171,6 +171,9 @@ def render_where(f: Filters, acc: pd.DataFrame) -> None:
                    "reflects the type of road, traffic and exposure — this chart does not measure the effect of "
                    "the limit itself.")
 
+    # ---- Correlation matrix ----
+    render_correlations(acc)
+
     # ---- Drill-down ----
     st.subheader("Drill down into one department")
     options = dep.sort_values("killed", ascending=False)["dep"].tolist()
@@ -212,6 +215,125 @@ def render_where(f: Filters, acc: pd.DataFrame) -> None:
              key="where_points")
     st.caption(f"Fatal accidents: all shown. Non-fatal: up to 4,000 drawn at random (seed {K.SEED}) to keep the map "
                "fast. Points whose GPS falls outside the department are excluded (0.01 %).")
+
+
+# ---------------------------------------------------------------------------
+# Correlation matrix (one row per department)
+# ---------------------------------------------------------------------------
+CORR_LABELS = {
+    "leth": "Lethality",
+    "log_acc": "Accidents (log)",
+    "rural": "% rural",
+    "unlit": "% night, unlit",
+    "night": "% night (all)",
+    "vma80": "% on 80 km/h roads",
+    "obst": "% fixed obstacle",
+    "lone": "% single vehicle",
+    "wkend": "% weekend",
+    "moto": "% motorcycle",
+    "ped": "% pedestrian",
+}
+CORR_DEFS = {
+    "Lethality": "people killed per 100 injury accidents",
+    "Accidents (log)": "number of injury accidents in the department (log10)",
+    "% rural": "accidents outside built-up areas",
+    "% night, unlit": "accidents at night on a road without street lighting",
+    "% night (all)": "accidents at night, lit or unlit",
+    "% on 80 km/h roads": "accidents where the speed limit is 80 km/h",
+    "% fixed obstacle": "accidents where a vehicle hit a fixed obstacle (tree, pole, wall, ditch…)",
+    "% single vehicle": "accidents with one vehicle and nobody else involved (loss of control)",
+    "% weekend": "accidents on Saturday or Sunday",
+    "% motorcycle": "accidents involving a motorcycle >50 cc",
+    "% pedestrian": "accidents involving a pedestrian",
+}
+
+CORR_PHRASES = {
+    "Accidents (log)": "accidents overall", "% rural": "accidents on rural roads",
+    "% night, unlit": "accidents on unlit roads at night", "% night (all)": "night-time accidents",
+    "% on 80 km/h roads": "accidents on 80 km/h roads", "% fixed obstacle": "crashes into fixed obstacles",
+    "% single vehicle": "single-vehicle crashes", "% weekend": "weekend accidents",
+    "% motorcycle": "accidents involving a motorcycle", "% pedestrian": "accidents involving a pedestrian",
+}
+
+
+def _join(items: list[str]) -> str:
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
+
+
+def department_features(acc: pd.DataFrame, min_acc: int = MIN_ACC_FOR_RATE) -> pd.DataFrame:
+    """One row per department: lethality and the share of accidents with each characteristic (%)."""
+    a = acc.assign(
+        rural=acc["area"].eq("Rural"),
+        unlit=acc["lum"].isin([3, 4]),
+        vma80=acc["vma"].eq(80).where(acc["vma"].notna()).astype("float"),
+        ped=acc["n_ped"] > 0,
+        lone=acc["single_vehicle"] & (acc["n_ped"] == 0),
+    )
+    g = a.groupby("dep", observed=True)
+    n = g.size()
+    feats = pd.DataFrame({
+        "leth": 100 * g["n_killed"].sum() / n,
+        "log_acc": np.log10(n),
+        "rural": 100 * g["rural"].mean(),
+        "unlit": 100 * g["unlit"].mean(),
+        "night": 100 * g["night"].mean(),
+        "vma80": 100 * g["vma80"].mean(),
+        "obst": 100 * g["hit_fixed_obstacle"].mean(),
+        "lone": 100 * g["lone"].mean(),
+        "wkend": 100 * g["weekend"].mean(),
+        "moto": 100 * g["has_moto"].mean(),
+        "ped": 100 * g["ped"].mean(),
+    })
+    feats = feats[n >= min_acc].astype(float)
+    # A column that does not vary (e.g. % rural when only rural roads are selected) has no correlation
+    return feats.loc[:, feats.std() > 1e-9]
+
+
+def render_correlations(acc: pd.DataFrame) -> None:
+    st.subheader("What goes together with deadly accidents? Correlations between departments")
+    feats = department_features(acc)
+    if len(feats) < 10 or "leth" not in feats:
+        st.info(f"The correlation matrix needs at least 10 departments with {MIN_ACC_FOR_RATE}+ accidents. "
+                "Widen the selection in the sidebar.")
+        return
+    method = st.segmented_control(
+        "Correlation", ["Pearson", "Spearman"], default="Pearson", key="corr_method", required=True,
+        help="Pearson measures a straight-line relationship; Spearman uses ranks and is less sensitive to "
+             "outlier departments.")
+    corr = feats.corr(method=method.lower())
+    order = ["leth"] + corr["leth"].drop("leth").sort_values(ascending=False).index.tolist()
+    corr = corr.loc[order, order].rename(index=CORR_LABELS, columns=CORR_LABELS)
+    with_leth = corr["Lethality"].drop("Lethality")
+    pos = with_leth[with_leth > 0.3].head(3)
+    neg = with_leth[with_leth < -0.3].sort_values().head(2)
+
+    left, right = st.columns([3, 2])
+    with left:
+        viz.show(
+            viz.corr_heatmap(corr),
+            alt=(f"Correlation matrix ({method}) between {len(corr)} department-level indicators, computed on "
+                 f"{len(feats)} departments. Blue = positive, red = negative. Strongest links with lethality: "
+                 + ", ".join(f"{k} (r = {v:+.2f})" for k, v in pd.concat([pos, neg]).items()) + "."),
+            key="where_corr", table=corr.round(2).reset_index().rename(columns={"index": "indicator"}))
+    with right:
+        st.markdown(f"**Read the first column** — how each indicator moves with lethality across "
+                    f"**{len(feats)} departments**:")
+        if len(pos):
+            st.markdown("Deadlier departments have a **higher share** of " + _join(
+                [f"{CORR_PHRASES[k]} (r = {v:+.2f})" for k, v in pos.items()]) + ".")
+        if len(neg):
+            st.markdown("They have " + _join(
+                [("**fewer** " if k == "Accidents (log)" else "a **lower share** of ") + f"{CORR_PHRASES[k]} "
+                 f"(r = {v:+.2f})" for k, v in neg.items()]) + ".")
+        st.markdown("These rural factors are also strongly linked **to each other** (look at the dark blue block): "
+                    "rural roads, 80 km/h limits, darkness and roadside obstacles come together. The matrix cannot "
+                    "say which one matters most on its own.")
+        st.caption(f"{method} correlation. Departments with fewer than {MIN_ACC_FOR_RATE} accidents are left out. "
+                   "Correlation is not causation, and a link between departments does not prove the same link for "
+                   "individual accidents. Small departments look deadlier partly because minor accidents are less "
+                   "often reported by the police there.")
+    with st.expander("Definitions of the indicators"):
+        st.markdown("\n".join(f"- **{k}**: {CORR_DEFS[k]}" for k in corr.index))
 
 
 # ---------------------------------------------------------------------------

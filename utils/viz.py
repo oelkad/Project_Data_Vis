@@ -369,3 +369,34 @@ def missing_heatmap(pv: pd.DataFrame) -> go.Figure:
     fig.update_yaxes(autorange="reversed", title=None)
     fig.update_xaxes(title=None, side="top")
     return style(fig, height=max(260, 24 * len(pv) + 60), legend=False)
+
+
+# ---------------------------------------------------------------------------
+# Correlation matrix
+# ---------------------------------------------------------------------------
+# Diverging scale: red (negative) <- neutral grey (0) -> blue (positive)
+DIVERGING = [[0.0, "#9c2222"], [0.17, "#e34948"], [0.33, "#f5b5b4"], [0.5, "#f0efec"],
+             [0.67, "#9ec5f4"], [0.83, "#3987e5"], [1.0, "#104281"]]
+
+
+def corr_heatmap(corr: pd.DataFrame) -> go.Figure:
+    """Lower-triangle correlation matrix with the value written in each cell."""
+    n = len(corr)
+    z = corr.to_numpy(dtype=float).copy()
+    z[np.triu_indices(n)] = np.nan          # hide the diagonal and the mirrored upper half
+    z, rows, cols = z[1:, :-1], list(corr.index[1:]), list(corr.columns[:-1])
+    fig = go.Figure(go.Heatmap(
+        z=z, x=cols, y=rows, zmin=-1, zmax=1, colorscale=DIVERGING, xgap=2, ygap=2, hoverongaps=False,
+        colorbar=dict(title=dict(text="correlation r", side="right"), thickness=12, outlinewidth=0,
+                      tickvals=[-1, -0.5, 0, 0.5, 1]),
+        hovertemplate="%{y} × %{x}<br>r = %{z:+.2f}<extra></extra>"))
+    for i, r in enumerate(rows):
+        for j, c in enumerate(cols):
+            v = z[i, j]
+            if np.isnan(v):
+                continue
+            fig.add_annotation(x=c, y=r, text=f"{v:+.2f}".replace("+0.", ".").replace("-0.", "−."),
+                               showarrow=False, font=dict(size=11, color="white" if abs(v) >= 0.55 else K.INK))
+    fig.update_yaxes(autorange="reversed", showgrid=False, title=None)
+    fig.update_xaxes(showgrid=False, title=None, tickangle=-40)
+    return style(fig, height=max(380, 44 * n + 120), legend=False)

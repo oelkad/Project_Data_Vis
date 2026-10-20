@@ -43,6 +43,7 @@
 5. **Unprotected road users** – per 1,000 people involved in an accident: pedestrians 49.8, motorcyclists 44.8, cyclists 38.5 vs car occupants 21.9.
 6. **Two age peaks** – ~496 deaths/year among 18–24-year-olds and ~486 among the over-75s (37 % of pedestrians killed are 75+). Men = 78 % of deaths.
 7. **New risk** – e-scooter deaths: 9 (2020) → 47 (2024).
+8. **What goes with deadly accidents (correlation matrix, 96 departments)** – lethality rises with the share of crashes into fixed obstacles (r = 0.75), accidents on 80 km/h roads (0.72) and on unlit roads at night (0.71); it falls where there are many accidents (−0.78) and many pedestrian accidents (−0.42). These rural factors are themselves strongly inter-correlated.
 
 **Implication:** halving deaths requires acting on rural roads **and** vulnerable users at the same time — no single group is large enough (see the *What would it take?* page).
 
@@ -132,7 +133,7 @@ app.py                     entry point: page config, navigation, sidebar filters
 sections/
   intro.py                 1 · hook, audience, questions, how to read
   overview.py              2 · KPI header tied to filters, monthly trend, urban vs rural
-  deep_dives.py            3 · Where (map, scatter, ranking, breakdowns, drill-down) / Who / When
+  deep_dives.py            3 · Where (map, scatter, ranking, breakdowns, correlation matrix, drill-down) / Who / When
   what_if.py               4 · scenario sliders vs EU 2030 goal (waterfall)
   conclusions.py           5 · insights, implications, limits, next steps
   data_quality.py          checks, cleaning log, missingness, biases, ethics, reproducibility
