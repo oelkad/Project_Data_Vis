@@ -7,7 +7,8 @@
 | **Name** | Othmane El Kadiri |
 | **Programme** | Data and AI |
 | **Email** | [othmane.el-kadiri@efrei.net](mailto:othmane.el-kadiri@efrei.net) |
-| **Year** | 2028 |
+| **Year** | 2026–2027 |
+| **Promo** | 2028 |
 | **LinkedIn** | [linkedin.com/in/othmane-el-kadiri-59733b252](https://www.linkedin.com/in/othmane-el-kadiri-59733b252/) |
 | **GitHub** | [github.com/oelkad](https://github.com/oelkad) |
 | **Course** | Data Analysis & Visualization |

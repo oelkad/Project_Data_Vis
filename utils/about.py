@@ -12,13 +12,14 @@ SCHOOL_URL = "https://www.efrei.fr"
 AUTHOR = {
     "name": "Othmane El Kadiri",
     "programme": "Data and AI",
-    "year": "Class of 2028",
+    "promo": "Promo 2028",
     "email": "othmane.el-kadiri@efrei.net",
     "linkedin": "https://www.linkedin.com/in/othmane-el-kadiri-59733b252/",
     "github": "https://github.com/oelkad",
 }
 COURSE = {
     "name": "Data Analysis & Visualization",
+    "year": "2026–2027",
     "professor": "Mano Joseph MATHEW",
     "professor_linkedin": "https://www.linkedin.com/in/manomathew/",
     "professor_email": "mano.mathew@efrei.fr",
@@ -40,12 +41,12 @@ def sidebar_about() -> None:
             st.image(str(LOGO), width=150)
         st.markdown(
             f"**{a['name']}**  \n"
-            f"{a['programme']} · {a['year']}  \n"
+            f"{a['programme']} · {a['promo']}  \n"
             f"[{a['email']}](mailto:{a['email']})  \n"
             f"[LinkedIn]({a['linkedin']}) · [GitHub]({a['github']})"
         )
         st.markdown(
-            f"**Course:** {c['name']}  \n"
+            f"**Course:** {c['name']} ({c['year']})  \n"
             f"**Professor:** [{c['professor']}]({c['professor_linkedin']})  \n"
             f"[{c['professor_email']}](mailto:{c['professor_email']})"
         )
@@ -60,12 +61,13 @@ def about_card() -> None:
             logo_col.image(str(LOGO), width=170)
         author_col.markdown(
             f"**{a['name']}**  \n"
-            f"{a['programme']} · Efrei Paris · {a['year']}  \n"
+            f"{a['programme']} · Efrei Paris · {a['promo']}  \n"
             f"[{a['email']}](mailto:{a['email']})  \n"
             f"[LinkedIn]({a['linkedin']}) · [GitHub]({a['github']})"
         )
         course_col.markdown(
             f"**Course:** {c['name']}  \n"
+            f"**Academic year:** {c['year']}  \n"
             f"**Professor:** {c['professor']}  \n"
             f"[{c['professor_email']}](mailto:{c['professor_email']})  \n"
             f"[LinkedIn]({c['professor_linkedin']})"
