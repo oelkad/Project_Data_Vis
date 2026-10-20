@@ -24,3 +24,11 @@ def test_section_renders(section, scenario):
         at.session_state[key] = value
     at.run()
     assert not at.exception, [e.value for e in at.exception]
+
+
+def test_full_app_with_author_card():
+    at = AppTest.from_file("../app.py", default_timeout=180)
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]
+    sidebar_text = " ".join(m.value for m in at.sidebar.markdown)
+    assert "Othmane El Kadiri" in sidebar_text and "Data Analysis & Visualization" in sidebar_text

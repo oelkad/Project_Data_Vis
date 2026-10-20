@@ -7,6 +7,7 @@ import streamlit as st
 from sections.common import headline, national_reference
 from utils import constants as K
 from utils import viz
+from utils.about import about_card
 from utils.filters import get_data
 
 
@@ -22,6 +23,7 @@ def render() -> None:
     st.title("Road deaths in France: the curve has stopped falling")
     st.caption("A data story on 268,788 injury road accidents, 2020–2024 · ONISR accident database (BAAC), "
                "published on data.gouv.fr")
+    about_card()
 
     headline(f"In 2024, <b>{k24:,} people</b> died on the roads of metropolitan France — almost "
              f"<b>{k24 / 365:.0f} a day</b>, and only <b>{abs(change_vs_2019):.1f}% fewer</b> than in 2019. "

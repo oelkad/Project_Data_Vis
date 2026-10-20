@@ -9,6 +9,7 @@ st.set_page_config(page_title="Road deaths in France – a data story", page_ico
                    initial_sidebar_state="expanded")
 
 from sections import conclusions, data_quality, deep_dives, intro, overview, what_if  # noqa: E402
+from utils.about import AUTHOR, sidebar_about, sidebar_logo  # noqa: E402
 from utils.filters import sidebar_filters  # noqa: E402
 from utils.io import license_text  # noqa: E402
 
@@ -26,14 +27,16 @@ pages = {
                 url_path="data-quality"),
     ],
 }
+sidebar_logo()
 page = st.navigation(pages, expanded=True)
 
 st.session_state["filters"] = sidebar_filters()
 st.session_state.setdefault("describe_charts", True)
 st.sidebar.toggle("Describe every chart in text", key="describe_charts",
                   help="Accessibility: prints a text description under each chart (also given as alt text).")
+sidebar_about()
 
 page.run()
 
 st.divider()
-st.caption(license_text() + " · Built with Streamlit · #EFREIDataStories2026")
+st.caption(license_text() + f" · © 2026 {AUTHOR['name']}, Efrei Paris · Built with Streamlit · #EFREIDataStories2026")

@@ -1,4 +1,17 @@
+<img src="assets/efrei_logo.png" alt="Efrei Paris" width="180">
+
 # Road deaths in France: the curve has stopped falling
+
+| | |
+|---|---|
+| **Name** | Othmane El Kadiri |
+| **Programme** | Data and AI |
+| **Email** | [othmane.el-kadiri@efrei.net](mailto:othmane.el-kadiri@efrei.net) |
+| **Year** | 2028 |
+| **LinkedIn** | [linkedin.com/in/othmane-el-kadiri-59733b252](https://www.linkedin.com/in/othmane-el-kadiri-59733b252/) |
+| **GitHub** | [github.com/oelkad](https://github.com/oelkad) |
+| **Course** | Data Analysis & Visualization |
+| **Professor** | Mano Joseph MATHEW · [LinkedIn](https://www.linkedin.com/in/manomathew/) · [mano.mathew@efrei.fr](mailto:mano.mathew@efrei.fr) |
 
 **A data-storytelling dashboard built with Streamlit** · Individual student project – EFREI Paris, Data Visualization 2026 · `#EFREIDataStories2026`
 
@@ -124,6 +137,7 @@ sections/
   data_quality.py          checks, cleaning log, missingness, biases, ethics, reproducibility
   common.py                shared helpers + fixed national reference figures
 utils/
+  about.py                 author, course and Efrei logo (sidebar card + intro card)
   constants.py             resource IDs, code labels, regions, palette, SEED
   io.py                    fetch_and_cache(), read_raw(), load_processed(), license_text()
   prep.py                  cleaning, validation, joins, feature engineering, quality report
@@ -135,6 +149,7 @@ tests/                     pytest: data invariants + app smoke tests
 data/processed/            accidents.parquet, users.parquet, missingness.parquet, quality.json
 data/geo/                  departements.geojson
 docs/                      storyboard, demo-video script
+assets/                    Efrei logo
 ```
 
 ### Engineering choices
