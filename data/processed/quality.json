@@ -1,361 +1,89 @@
 {
-  "built_at": "2026-10-19 15:09 UTC",
-  "row_counts": {
-    "caract": {
-      "2020": 47744,
-      "2021": 56518,
-      "2022": 55302,
-      "2023": 54822,
-      "2024": 54402
-    },
-    "lieux": {
-      "2020": 47744,
-      "2021": 56518,
-      "2022": 55302,
-      "2023": 70860,
-      "2024": 70248
-    },
-    "vehicules": {
-      "2020": 81066,
-      "2021": 97315,
-      "2022": 94493,
-      "2023": 93585,
-      "2024": 92678
-    },
-    "usagers": {
-      "2020": 105295,
-      "2021": 129248,
-      "2022": 126662,
-      "2023": 125789,
-      "2024": 125187
-    }
-  },
   "n_accidents": 268788,
   "n_users": 612181,
-  "files": [
-    {
-      "year": 2020,
-      "table": "caract",
-      "official_file": "caracteristiques-2020.csv",
-      "bytes": 5655584,
-      "official_bytes": 5655584,
-      "check": "identical size"
-    },
-    {
-      "year": 2020,
-      "table": "lieux",
-      "official_file": "lieux-2020.csv",
-      "bytes": 4521088,
-      "official_bytes": 4521088,
-      "check": "identical size"
-    },
-    {
-      "year": 2020,
-      "table": "vehicules",
-      "official_file": "vehicules-2020.csv",
-      "bytes": 5492931,
-      "official_bytes": 5492931,
-      "check": "identical size"
-    },
-    {
-      "year": 2020,
-      "table": "usagers",
-      "official_file": "usagers-2020.csv",
-      "bytes": 10054646,
-      "official_bytes": 10054646,
-      "check": "identical size"
-    },
-    {
-      "year": 2021,
-      "table": "caract",
-      "official_file": "carcteristiques-2021.csv",
-      "bytes": 7045926,
-      "official_bytes": 7045926,
-      "check": "identical size"
-    },
-    {
-      "year": 2021,
-      "table": "lieux",
-      "official_file": "lieux-2021.csv",
-      "bytes": 5771984,
-      "official_bytes": 5771984,
-      "check": "identical size"
-    },
-    {
-      "year": 2021,
-      "table": "vehicules",
-      "official_file": "vehicules-2021.csv",
-      "bytes": 6202316,
-      "official_bytes": 6202316,
-      "check": "identical size"
-    },
-    {
-      "year": 2021,
-      "table": "usagers",
-      "official_file": "usagers-2021.csv",
-      "bytes": 13028412,
-      "official_bytes": 13028412,
-      "check": "identical size"
-    },
-    {
-      "year": 2022,
-      "table": "caract",
-      "official_file": "carcteristiques-2022.csv",
-      "bytes": 6884406,
-      "official_bytes": 6884406,
-      "check": "identical size"
-    },
-    {
-      "year": 2022,
-      "table": "lieux",
-      "official_file": "lieux-2022.csv",
-      "bytes": 5617313,
-      "official_bytes": 5617313,
-      "check": "identical size"
-    },
-    {
-      "year": 2022,
-      "table": "vehicules",
-      "official_file": "vehicules-2022.csv",
-      "bytes": 6021965,
-      "official_bytes": 6021965,
-      "check": "identical size"
-    },
-    {
-      "year": 2022,
-      "table": "usagers",
-      "official_file": "usagers-2022.csv",
-      "bytes": 13013255,
-      "official_bytes": 13013255,
-      "check": "identical size"
-    },
-    {
-      "year": 2023,
-      "table": "caract",
-      "official_file": "caract-2023.csv",
-      "bytes": 6591826,
-      "official_bytes": 6591826,
-      "check": "identical size"
-    },
-    {
-      "year": 2023,
-      "table": "lieux",
-      "official_file": "lieux-2023.csv",
-      "bytes": 7176266,
-      "official_bytes": 7176266,
-      "check": "identical size"
-    },
-    {
-      "year": 2023,
-      "table": "vehicules",
-      "official_file": "vehicules-2023.csv",
-      "bytes": 6431828,
-      "official_bytes": 6431828,
-      "check": "identical size"
-    },
-    {
-      "year": 2023,
-      "table": "usagers",
-      "official_file": "usagers-2023.csv",
-      "bytes": 13938227,
-      "official_bytes": 13938227,
-      "check": "identical size"
-    },
-    {
-      "year": 2024,
-      "table": "caract",
-      "official_file": "caract-2024.csv",
-      "bytes": 6538156,
-      "official_bytes": 6538156,
-      "check": "identical size"
-    },
-    {
-      "year": 2024,
-      "table": "lieux",
-      "official_file": "lieux-2024.csv",
-      "bytes": 7070795,
-      "official_bytes": 7070795,
-      "check": "identical size"
-    },
-    {
-      "year": 2024,
-      "table": "vehicules",
-      "official_file": "vehicules-2024.csv",
-      "bytes": 6369908,
-      "official_bytes": 6369908,
-      "check": "identical size"
-    },
-    {
-      "year": 2024,
-      "table": "usagers",
-      "official_file": "usagers-2024.csv",
-      "bytes": 13843733,
-      "official_bytes": 13843733,
-      "check": "identical size"
-    }
-  ],
+  "n_raw_rows": 1640778,
   "cleaning_log": [
     {
-      "step": "Schema harmonisation",
-      "rows": 55302,
-      "action": "Key column 'Accident_Id' (2022 file) renamed 'Num_Acc'; surrounding spaces stripped (values such as ' -1'); every value read as text, then typed explicitly."
+      "step": "Schema",
+      "rows": 268788,
+      "action": "Key 'Accident_Id' (2022) renamed 'Num_Acc'; spaces stripped; values read as text, then typed."
     },
     {
-      "step": "Dates & times",
-      "rows": 0,
-      "action": "Built a proper date from jour/mois/an (month coded '1' in 2020 vs '01' afterwards). Invalid dates: 0; invalid hrmn: 0."
+      "step": "Dates, hours, GPS",
+      "rows": 18,
+      "action": "Date built from jour/mois/an; hour from hrmn; decimal commas in GPS fixed. Points outside their territory are only left out of the point map."
     },
     {
-      "step": "GPS coordinates",
-      "rows": 21,
-      "action": "Decimal commas converted to points. Points outside the bounding box of their own department are flagged (geo_ok = False) and left out of the point map only; they still count in every statistic (the department code is reliable)."
+      "step": "Locations",
+      "rows": 31884,
+      "action": "Several roads listed for one accident (since 2023): main road kept, so accidents are not double-counted. Speed limits: typos fixed (500→50…), impossible values set to missing."
     },
     {
-      "step": "Several road rows per accident",
-      "rows": 31515,
-      "action": "From 2023 the LIEUX file lists every road involved in an intersection (70,860 rows for 54,822 accidents in 2023). We keep the first row (main road) so the join stays one-to-one and accidents are not double-counted."
-    },
-    {
-      "step": "Speed limit (vma)",
-      "rows": 6524,
-      "action": "58 values with an extra zero (500→50, 900→90…) corrected; 294 implausible values (1, 2, 5, 6 km/h…) and 6172 'not filled' (-1) set to missing."
-    },
-    {
-      "step": "Age",
-      "rows": 11146,
-      "action": "Age = accident year − birth year. Missing birth year (mostly fleeing users added since 2021) or implausible age (28 rows, <0 or >105) → missing."
-    },
-    {
-      "step": "Injury severity unknown (grav = -1)",
+      "step": "People",
       "rows": 419,
-      "action": "Users who fled the scene are recorded since 2021 without severity. They are kept in the table but excluded from victim counts."
-    },
-    {
-      "step": "Road-user mode (feature)",
-      "rows": 612181,
-      "action": "31 vehicle codes (catv) grouped into 8 modes; pedestrians identified by catu = 3 (they are attached to the vehicle that hit them)."
+      "action": "Age = year − birth year (impossible ages removed). People who fled (since 2021) have no injury severity: kept, but not counted as victims. 31 vehicle codes grouped into 8 modes."
     }
   ],
   "checks": [
     {
-      "check": "Accident key unique in CARACT",
+      "check": "Accident ID unique",
       "value": 0,
-      "status": "pass",
-      "detail": "Num_Acc (named Accident_Id in 2022) is unique within every yearly file."
+      "status": "✅ pass",
+      "detail": "Num_Acc is unique in the accidents table."
     },
     {
-      "check": "Referential integrity (child → CARACT)",
+      "check": "Every row links to an accident",
       "value": 0,
-      "status": "pass",
-      "detail": "Rows of LIEUX / VEHICULES / USAGERS whose accident does not exist: lieux 0, vehicules 0, usagers 0."
+      "status": "✅ pass",
+      "detail": "Rows of the locations, vehicles and people tables whose accident does not exist."
     },
     {
-      "check": "Each accident has ≥1 vehicle and ≥1 person",
+      "check": "Every accident has a vehicle and a person",
       "value": 0,
-      "status": "pass",
-      "detail": "Accidents without person: 0; without vehicle: 0."
+      "status": "✅ pass",
+      "detail": "Accidents with no vehicle or nobody recorded."
     },
     {
-      "check": "Person → vehicle link (Num_Acc + id_vehicule)",
+      "check": "Codes of caract.lum",
       "value": 0,
-      "status": "pass",
-      "detail": "Every person is attached to a vehicle of the same accident (pedestrians to the vehicle that hit them)."
+      "status": "✅ pass",
+      "detail": "Values outside the codebook list."
     },
     {
-      "check": "Vehicles with no person recorded",
-      "value": 1969,
-      "status": "info",
-      "detail": "Hit-and-run drivers that were not created in USAGERS (documented by ONISR)."
-    },
-    {
-      "check": "Identical rows in USAGERS 2020",
-      "value": 63,
-      "status": "warn",
-      "detail": "2020 has no person identifier, so two passengers of the same car with the same sex and birth year look identical. They are plausible real people → kept (0.06 % of 2020 rows)."
-    },
-    {
-      "check": "Code domain caract.lum",
+      "check": "Codes of caract.col",
       "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5]…)."
+      "status": "✅ pass",
+      "detail": "Values outside the codebook list."
     },
     {
-      "check": "Code domain caract.agg",
+      "check": "Codes of usagers.grav",
       "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2]…)."
+      "status": "✅ pass",
+      "detail": "Values outside the codebook list."
     },
     {
-      "check": "Code domain caract.int",
+      "check": "Codes of usagers.catu",
       "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5, 6]…)."
+      "status": "✅ pass",
+      "detail": "Values outside the codebook list."
     },
     {
-      "check": "Code domain caract.atm",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5, 6]…)."
+      "check": "GPS point inside its territory",
+      "value": "99.99%",
+      "status": "⚠️ warning",
+      "detail": "18 accidents left out of the point map only."
     },
     {
-      "check": "Code domain caract.col",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5, 6]…)."
-    },
-    {
-      "check": "Code domain lieux.catr",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5, 6]…)."
-    },
-    {
-      "check": "Code domain lieux.surf",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4, 5, 6]…)."
-    },
-    {
-      "check": "Code domain vehicules.catv",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([0, 1, 2, 3, 7, 10]…)."
-    },
-    {
-      "check": "Code domain usagers.catu",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3]…)."
-    },
-    {
-      "check": "Code domain usagers.grav",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2, 3, 4]…)."
-    },
-    {
-      "check": "Code domain usagers.sexe",
-      "value": 0,
-      "status": "pass",
-      "detail": "Values outside the codebook list ([1, 2]…)."
-    },
-    {
-      "check": "GPS point inside its department",
-      "value": "99.99 %",
-      "status": "warn",
-      "detail": "21 accidents (0.01 %) have coordinates outside their department's bounding box → excluded from the point map only."
-    },
-    {
-      "check": "Reconciliation with ONISR official deaths 2023",
+      "check": "Deaths 2023 vs official ONISR figure",
       "value": "3,398 vs 3,398",
-      "status": "pass",
-      "detail": "Killed (France incl. overseas) in our cleaned table vs the official annual report."
+      "status": "✅ pass",
+      "detail": "People killed (France incl. overseas) in the cleaned data vs the official annual report."
     },
     {
-      "check": "Reconciliation with ONISR official deaths 2024",
+      "check": "Deaths 2024 vs official ONISR figure",
       "value": "3,432 vs 3,432",
-      "status": "pass",
-      "detail": "Killed (France incl. overseas) in our cleaned table vs the official annual report."
+      "status": "✅ pass",
+      "detail": "People killed (France incl. overseas) in the cleaned data vs the official annual report."
     }
   ]
 }

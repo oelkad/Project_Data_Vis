@@ -62,32 +62,32 @@
 | **Reference layer** | Department boundaries: IGN Admin Express, simplified by [france-geojson](https://github.com/gregoiredavid/france-geojson) (Licence Ouverte) |
 | **Context figures** | 2019 baseline (3,244 deaths) – ONISR *Bilan 2024*; EU target −50 % 2019→2030 – European Commission |
 
-The exact resource IDs and official byte sizes of the 20 files are in `utils/constants.py` (`RESOURCES`). The raw files are **not** bundled: `scripts/build_data.py` downloads them from their stable data.gouv.fr links. The small, analysis-ready Parquet files are included in `data/processed/` so the app starts instantly.
+The resource IDs of the 20 files are in `utils/constants.py` (`RESOURCES`). The raw files are **not** bundled: `scripts/build_data.py` downloads them from data.gouv.fr. The small, analysis-ready Parquet files are included in `data/processed/` so the app starts instantly.
 
 ### Four tables, one join key
 
 ```
 caract (1 row / accident) ──Num_Acc── lieux (1+ rows / accident since 2023)
-        │                                  
+        │
         └──Num_Acc── vehicules (1 row / vehicle) ──Num_Acc + id_vehicule── usagers (1 row / person)
 ```
 
-### Cleaning & validation (all shown in the app, page *Data quality & method*)
+### Cleaning & validation (shown in the app, page *Data quality & method*)
 
-- Schema harmonisation: key `Accident_Id` (2022) → `Num_Acc`; spaces stripped (`" -1"`); everything read as text then typed explicitly; month `"1"` (2020) vs `"01"`.
-- `lieux` lists several roads per accident from 2023 (70,860 rows for 54,822 accidents) → first (main) road kept, so joins stay one-to-one.
-- Speed limit: typos with an extra zero corrected (500→50…), implausible values (1–6 km/h) and `-1` set to missing.
-- GPS: decimal commas, check that each point falls inside its own department's bounding box (99.99 % do).
-- Age from birth year; implausible ages removed; people who fled (since 2021, no severity) kept but excluded from victim counts.
-- **Validation:** key uniqueness, referential integrity of the 3 child tables, person→vehicle link, code domains for 11 coded variables, file sizes vs published sizes, and **reconciliation with ONISR's official death toll (2023: 3,398; 2024: 3,432 — identical)**.
+- Schema harmonisation: key `Accident_Id` (2022) → `Num_Acc`; spaces stripped (`" -1"`); everything read as text, then typed.
+- `lieux` lists several roads per accident since 2023 → main road kept, so accidents are not double-counted.
+- Speed limit: typos with an extra zero corrected (500→50…), impossible values set to missing.
+- GPS: decimal commas fixed; points outside their territory left out of the point map only.
+- Age from birth year; people who fled (since 2021, no severity) kept but not counted as victims.
+- **Validation:** unique accident ID, every row linked to an accident, codes inside the codebook, and **reconciliation with ONISR's official death toll (2023: 3,398; 2024: 3,432 — identical)**.
 
 ### Feature engineering
 
-`lethality` (killed per 100 accidents), `area` (urban / rural), `mode` (31 vehicle codes + pedestrians → 8 road-user groups), `age_band`, `night`, `weekend`, `light_group`, `severity`, `single_vehicle`, `hit_tree`, `hit_fixed_obstacle`, presence flags (`has_moto`, `has_bike`, `has_edp`…), `region`, `territory`.
+`lethality` (killed per 100 accidents), `area` (urban / rural), `mode` (31 vehicle codes + pedestrians → 8 road-user groups), `age_band`, `night`, `light_group`, `weekend`, `single_vehicle` (one vehicle, nobody else involved), `hit_fixed_obstacle`, `hit_tree`, `has_moto`, `region`, `territory`.
 
 ### Limitations (also in the app)
 
-Police-recorded data under-count slight injuries (lethality is an upper bound) · "hospitalised" no longer an official statistic since 2019 · no exposure data (vehicle-km), so rates are per accident / per person involved, not per km · 2020 distorted by lockdowns · associations, not causal effects.
+Police-recorded data under-count slight injuries (lethality is an upper bound) · "hospitalised" no longer an official statistic since 2019 · no traffic volumes, so rates are per accident / per person involved, not per km · 2020 distorted by lockdowns · associations, not causal effects.
 
 ---
 
@@ -96,74 +96,58 @@ Police-recorded data under-count slight injuries (lethality is an upper bound) �
 Requires **Python 3.11+** (tested with 3.13).
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate            # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py                 # opens http://localhost:8501
 ```
 
-Rebuild the processed data from the official files (≈150 MB download, ~30 s processing):
+Rebuild the processed data from the official files (≈150 MB download the first time, ~20 s processing):
 
 ```bash
-python -m scripts.build_data            # uses cached raw files in data/raw/ if present
-python -m scripts.build_data --refresh  # force a fresh download from data.gouv.fr
+python -m scripts.build_data         # delete data/raw/ first to force a fresh download
 ```
-
-Tests (data invariants + every page under 7 filter scenarios):
-
-```bash
-pip install -r requirements-dev.txt
-python -m pytest
-```
-
-Or with `make`: `make install`, `make data`, `make run`, `make test`.
 
 ### Deploy on Streamlit Community Cloud
 
-1. Push this folder to a public GitHub repository (the `.gitignore` excludes `data/raw/`).
-2. On <https://share.streamlit.io> → *Create app* → choose the repo, branch `main`, main file `app.py`; in *Advanced settings* pick Python 3.12 or 3.13.
-3. Deploy. The app reads `data/processed/*.parquet`; if they are missing it rebuilds them by downloading the raw files.
+1. Push this folder to a public GitHub repository (`data/raw/` is excluded by `.gitignore`).
+2. On <https://share.streamlit.io> → *Create app* → repo, branch `main`, file `app.py`, Python 3.13.
+3. After each `git push`, use *Reboot app* if a change does not show up.
 
 ---
 
 ## 4. Project structure
 
 ```
-app.py                     entry point: page config, navigation, sidebar filters
+app.py               entry point: page config, navigation, sidebar filters, footer
 sections/
-  intro.py                 1 · hook, audience, questions, how to read
-  overview.py              2 · KPI header tied to filters, monthly trend, urban vs rural
-  deep_dives.py            3 · Where (map, scatter, ranking, breakdowns, correlation matrix, drill-down) / Who / When
-  what_if.py               4 · scenario sliders vs EU 2030 goal (waterfall)
-  conclusions.py           5 · insights, implications, limits, next steps
-  data_quality.py          checks, cleaning log, missingness, biases, ethics, reproducibility
-  common.py                shared helpers + fixed national reference figures
+  intro.py           1 · hook, author card, audience, questions
+  overview.py        2 · KPIs tied to the filters, monthly trend, urban vs rural
+  deep_dives.py      3 · Where (map, scatter, top 10, breakdowns, correlation matrix, drill-down) / Who / When
+  what_if.py         4 · scenario sliders vs the EU 2030 goal (waterfall)
+  conclusions.py     5 · insights, where to act, limits
+  data_quality.py    checks, cleaning log, limitations, reproducibility
+  common.py          shared helpers + fixed national figures used in the text
 utils/
-  about.py                 author, course and Efrei logo (sidebar card + intro card)
-  constants.py             resource IDs, code labels, regions, palette, SEED
-  io.py                    fetch_and_cache(), read_raw(), load_processed(), license_text()
-  prep.py                  cleaning, validation, joins, feature engineering, quality report
-  filters.py               sidebar filters + cached filtering
-  metrics.py               group-by aggregations (accidents, killed, lethality…)
-  viz.py                   chart functions enforcing one visual style
-scripts/build_data.py      download + rebuild processed data
-tests/                     pytest: data invariants + app smoke tests
-data/processed/            accidents.parquet, users.parquet, missingness.parquet, quality.json
-data/geo/                  departements.geojson
-docs/                      storyboard, demo-video script
-assets/                    Efrei logo
+  constants.py       source file IDs, code labels, regions, colours
+  io.py              download with cache, load the processed tables
+  prep.py            cleaning, joins, feature engineering, validation checks
+  filters.py         sidebar filters, cached filtering, summarize() aggregation
+  viz.py             every chart (Plotly) with one shared style
+  about.py           author / course card and Efrei logo
+scripts/build_data.py   rebuild data/processed/ from the raw files
+data/processed/      accidents.parquet, users.parquet, quality.json
+data/geo/            departements.geojson
+docs/                storyboard, demo-video script
+assets/              Efrei logo
 ```
 
 ### Engineering choices
 
-- **Performance:** raw CSVs are processed once into typed Parquet (11 MB); the app loads them with `st.cache_data`; filtered tables are cached per filter combination; accident-level counts are pre-aggregated so most charts are a single `groupby`. The point map draws all fatal accidents but samples non-fatal ones (≤4,000, fixed `SEED`).
-- **Reproducibility:** pinned `requirements.txt`, deterministic pipeline, fixed seed, stable source URLs with size checks, tests.
-- **Accessibility:** every chart has `alt` text *and* an optional visible text description (sidebar toggle), plus a table view; axes and units labelled; one primary hue (blue), orange only for contrast, grey for context — pair validated for colour-blind separation; sequential maps use a single-hue ramp; no dual axes; small multiples instead of busy legends.
-- **Map basemap:** the department choropleth needs no external tiles. The drill-down point map uses CARTO "positron" tiles loaded by the browser; set `MAP_STYLE=white-bg` to run fully offline.
+- **Performance:** raw CSVs are processed once into typed Parquet (≈9 MB); the app loads them with `st.cache_data` and caches each filter combination; per-accident counts are pre-computed, so most charts are a single `groupby`. The point map shows every fatal accident and a random sample of up to 4,000 others.
+- **Reproducibility:** pinned `requirements.txt`, one script rebuilds all the data from the official files.
+- **Readability of the charts:** one main colour (blue), orange only for contrast, grey for context; one-hue scale for maps; blue/red for correlations; no dual axes; small multiples instead of crowded legends; hover tooltips everywhere.
 
 ---
 
 ## 5. Credits & licences
 
 - Data: ONISR – Ministère de l'Intérieur, via data.gouv.fr, Licence Ouverte v2.0. Boundaries: IGN / france-geojson, Licence Ouverte.
-- Code: MIT licence (see `LICENSE`).
