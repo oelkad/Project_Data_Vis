@@ -17,6 +17,6 @@ Files used (2020–2024, 4 tables per year) — stable links `https://www.data.g
 
 Codebook: "Description des bases de données annuelles des accidents corporels de la circulation routière – Années de 2005 à 2024" (ONISR, 21 Oct 2025), on the same dataset page.
 
-Processed, analysis-ready extract included in `data/processed/` (Parquet, 11 MB). Rebuild with `python -m scripts.build_data`.
+Processed, analysis-ready extract included in `data/processed/` (Parquet, ≈9 MB). Rebuild with `python -m scripts.build_data`.
 
 Reference layer: department boundaries – IGN Admin Express (simplified) via https://github.com/gregoiredavid/france-geojson (Licence Ouverte), file `data/geo/departements.geojson`.

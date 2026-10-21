@@ -14,7 +14,7 @@
 | **Course** | Data Analysis & Visualization |
 | **Professor** | Mano Joseph MATHEW · [LinkedIn](https://www.linkedin.com/in/manomathew/) · [mano.mathew@efrei.fr](mailto:mano.mathew@efrei.fr) |
 
-**A data-storytelling dashboard built with Streamlit** · Individual student project – EFREI Paris, Data Visualization 2026 · `#EFREIDataStories2026`
+**A data-storytelling dashboard built with Streamlit** · Individual student project – Efrei Paris, Data Analysis & Visualization 2026–2027 · `#EFREIDataStories2026`
 
 > In 2024, 3,193 people died on the roads of metropolitan France — almost 9 a day, and only 1.6 % fewer than in 2019.
 > The EU wants road deaths halved by 2030. This app shows **where, who and when** the risk concentrates, and what it would take to get there.
@@ -79,7 +79,7 @@ caract (1 row / accident) ──Num_Acc── lieux (1+ rows / accident since 20
 - Speed limit: typos with an extra zero corrected (500→50…), impossible values set to missing.
 - GPS: decimal commas fixed; points outside their territory left out of the point map only.
 - Age from birth year; people who fled (since 2021, no severity) kept but not counted as victims.
-- **Validation:** unique accident ID, every row linked to an accident, codes inside the codebook, and **reconciliation with ONISR's official death toll (2023: 3,398; 2024: 3,432 — identical)**.
+- **Validation:** unique accident ID, every row linked to an accident, every accident with a vehicle and a person, codes inside the codebook, GPS inside its territory, and **reconciliation with ONISR's official death toll (2023: 3,398; 2024: 3,432 — identical)**.
 
 ### Feature engineering
 
